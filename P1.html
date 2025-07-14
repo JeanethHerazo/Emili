@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dreamspaint - Venta de Dibujos</title>
+  <style>
+    /* Reset y estilos base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: #673ab7;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 3px 6px rgba(103, 58, 183, 0.5);
+    }
+    header h1 {
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+    }
+    nav {
+      background: #5e35b1;
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      padding: 12px 0;
+      box-shadow: 0 2px 4px rgba(94, 53, 177, 0.5);
+    }
+    nav a {
+      color: #d1c4e9;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    nav a:hover, nav a.active {
+      color: #ffd54f;
+      font-weight: 700;
+    }
+    main {
+      flex: 1;
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px 40px;
+      min-height: 60vh;
+    }
+    /* Home */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 30px;
+    }
+    .art-item {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 18px rgba(103, 58, 183, 0.15);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    .art-item:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(103, 58, 183, 0.3);
+    }
+    .art-item img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-bottom: 3px solid #673ab7;
+    }
+    .art-content {
+      padding: 15px 20px;
+      text-align: center;
+    }
+    .art-content h3 {
+      color: #512da8;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .art-content p {
+      color: #555;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      min-height: 48px;
+    }
+    .price {
+      font-weight: 700;
+      color: #e91e63;
+      font-size: 1.2rem;
+    }
+
+    /* Login */
+    #loginForm {
+      max-width: 350px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(103, 58, 183, 0.2);
+    }
+    #loginForm h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #5e35b1;
+    }
+    #loginForm label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    #loginForm input[type="text"],
+    #loginForm input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 15px;
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    #loginForm input[type="text"]:focus,
+    #loginForm input[type="password"]:focus {
+      border-color: #673ab7;
+      outline: none;
+    }
+    #loginForm button {
+      width: 100%;
+      padding: 12px;
+      background: #673ab7;
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    #loginForm button:hover {
+      background: #512da8;
+    }
+    #loginError {
+      color: #e53935;
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    /* About Us */
+    #aboutUs {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(103, 58, 183, 0.15);
+      line-height: 1.6;
+      font-size: 1.1rem;
+      color: #444;
+    }
+    #aboutUs h2 {
+      text-align: center;
+      color: #512da8;
+      margin-bottom: 20px;
+    }
+    #aboutUs p {
+      margin-bottom: 15px;
+    }
+
+    footer {
+      background: #ede7f6;
+      color: #512da8;
+      text-align: center;
+      padding: 18px;
+      font-size: 0.9rem;
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.6);
+    }
+
+    /* Mensajes de bienvenida cuando se logea */
+    #welcomeMsg {
+      max-width: 400px;
+      margin: 20px auto 0;
+      background: #d1c4e9;
+      border-radius: 12px;
+      padding: 15px 20px;
+      text-align: center;
+      font-weight: 700;
+      color: #311b92;
+      box-shadow: 0 4px 12px rgba(103,58,183,0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+      nav {
+        gap: 15px;
+      }
+      main {
+        margin: 25px 15px 40px;
+      }
+      .art-item img {
+        height: 140px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Dreams</h1>
+</header>
+
+<nav>
+  <a href="#" id="navHome" class="active">Home</a>
+  <a href="#" id="navLogin">Login</a>
+  <a href="#" id="navAbout">About Us</a>
+</nav>
+
+<main>
+  <!-- Home -->
+  <section id="homeSection">
+    <h2>Dibujos en Venta</h2>
+    <div class="gallery">
+      <article class="art-item">
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Dibujo de fantasía" />
+        <div class="art-content">
+          <h3>Dibujo de Fantasía</h3>
+          <p>Una obra llena de magia y colores vibrantes que transportan a otro mundo.</p>
+          <p class="price">$20.00 USD</p>
+        </div>
+      </article>
+
+      <article class="art-item">
+        <img src="https://latortuguitablanca.com/wp-content/uploads/2019/03/retrato-pareja.jpg" alt="Retrato personalizado" />
+        <div class="art-content">
+          <h3>Retrato Personalizado</h3>
+          <p>Captura la esencia de tus seres queridos con este retrato único y especial.</p>
+          <p class="price">$30.00 USD</p>
+        </div>
+      </article>
+
+      <article class="art-item">
+        <img src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=400&q=80" alt="Paisaje natural" />
+        <div class="art-content">
+          <h3>Paisaje Natural</h3>
+          <p>Inspirado en la belleza de la naturaleza, ideal para decorar cualquier espacio.</p>
+          <p class="price">$25.00 USD</p>
+        </div>
+      </article>
+
+      <article class="art-item">
+        <img src="https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg" alt="Arte abstracto" />
+        <div class="art-content">
+          <h3>Arte Abstracto</h3>
+          <p>Formas y colores que estimulan la imaginación y creatividad.</p>
+          <p class="price">$22.00 USD</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Login -->
+  <section id="loginSection" style="display:none;">
+    <form id="loginForm" novalidate>
+      <h2>Iniciar Sesión</h2>
+      <div id="loginError"></div>
+      <label for="username">Usuario</label>
+      <input type="text" id="username" name="username" required placeholder="Tu usuario" />
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" name="password" required placeholder="Tu contraseña" />
+      <button type="submit">Entrar</button>
+    </form>
+  </section>
+
+  <!-- About Us -->
+  <section id="aboutSection" style="display:none;">
+    <div id="aboutUs">
+      <h2>Sobre Dreams</h2>
+      <p>Dreams es una plataforma dedicada a la venta de dibujos originales y personalizados. Nuestra misión es conectar a artistas talentosos con clientes que buscan obras únicas y llenas de creatividad.</p>
+      <p>Creemos en el poder del arte para transformar espacios y emociones. Por eso ofrecemos una variedad de estilos y temáticas para satisfacer todos los gustos.</p>
+      <p>¿Tienes una idea especial? Contáctanos y haremos realidad el dibujo de tus sueños.</p>
+    </div>
+  </section>
+
+  <!-- Mensaje de bienvenida tras login -->
+  <div id="welcomeMsg" style="display:none;"></div>
+</main>
+
+<footer>
+  &copy; 2025 Dreams. Todos los derechos reservados.
+</footer>
+
+<script>
+  // Navegación básica sin recarga
+  const navLinks = {
+    home: document.getElementById('navHome'),
+    login: document.getElementById('navLogin'),
+    about: document.getElementById('navAbout')
+  };
+  const sections = {
+    home: document.getElementById('homeSection'),
+    login: document.getElementById('loginSection'),
+    about: document.getElementById('aboutSection'),
+  };
+  const welcomeMsg = document.getElementById('welcomeMsg');
+  let loggedInUser = null;
+
+  function showSection(section) {
+    // Ocultar todas
+    Object.values(sections).forEach(sec => sec.style.display = 'none');
+    // Remover active de nav
+    Object.values(navLinks).forEach(link => link.classList.remove('active'));
+    // Mostrar la sección seleccionada
+    sections[section].style.display = 'block';
+    navLinks[section].classList.add('active');
+    welcomeMsg.style.display = 'none'; // ocultar mensaje bienvenida al navegar
+  }
+
+  navLinks.home.addEventListener('click', e => {
+    e.preventDefault();
+    showSection('home');
+  });
+  navLinks.login.addEventListener('click', e => {
+    e.preventDefault();
+    showSection('login');
+  });
+  navLinks.about.addEventListener('click', e => {
+    e.preventDefault();
+    showSection('about');
+  });
+
+  // Mostrar home al cargar
+  showSection('home');
+
+  // Simulación básica login
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+
+  // Usuarios "registrados" hardcodeados (solo demo)
+  const usersDB = {
+    'usuario1': '12345',
+    'cliente': 'password',
+    'admin': 'admin123'
+  };
+
+
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const username = loginForm.username.value.trim();
+    const password = loginForm.password.value;
+    <!-- Register Section -->
+
+    if(!username || !password) {
+      loginError.textContent = 'Por favor, completa ambos campos.';
+      return;
+    }
+    if(usersDB[username] && usersDB[username] === password) {
+      loginError.textContent = '';
+      loggedInUser = username;
+      showSection('home');
+      welcomeMsg.textContent = `¡Bienvenido/a, ${username}! Gracias por iniciar sesión en Dreams.`;
+      welcomeMsg.style.display = 'block';
+      loginForm.reset();
+    } else {
+      loginError.textContent = 'Usuario o contraseña incorrectos.';
+    }
+  });
+ 
+
+</script>
+<!-- Footer -->
+<footer>
+  <div class="socials">
+    <a href="https://twitter.com/spaceexplorer" target="_blank">🐦 Twitter</a>
+    <a href="https://facebook.com/spaceexplorer" target="_blank">📘 Facebook</a>
+    <a href="https://instagram.com/spaceexplorer" target="_blank">📸 Instagram</a>
+  </div>
+  <div class="contact-info">
+    <p>Contacto: <a href="mailto:contacto@spaceexplorer.com">contacto@spaceexplorer.com</a> | Teléfono: +1 (800) 123 4567</p>
+  </div>
+</footer>
+</body>
+</html>
+
